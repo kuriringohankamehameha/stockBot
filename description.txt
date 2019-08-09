@@ -1,0 +1,1 @@
+A Discord Bot that scrapes certain Stock Market Sites, made with Selenium and Python

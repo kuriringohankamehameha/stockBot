@@ -1,0 +1,18 @@
+Firefox Web Driver:
+    
+    For MacOS ONLY:
+        https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-macos.tar.gz
+
+    For Windows 10 ONLY:
+        https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-win64.zip
+
+    For Linux ONLY:
+        https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz
+
+Imgur API Credentials:
+    https://api.imgur.com/oauth2/addclient
+
+Discord Developer Portal:
+    https://discordapp.com/developers/applications/
+
+You can find the Bot token in the "Bot" section, in the Token subheading
