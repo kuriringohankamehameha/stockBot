@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
 
-def gunzip_shutil(source_filepath, dest_filepath, block_size=65536):
-    with gzip.open(source_filepath, 'rb') as s_file, \
-            open(dest_filepath, 'wb') as d_file:
-        shutil.copyfileobj(s_file, d_file, block_size)
-
 def unzip_file(path_to_zip_file, directory_to_extract_to):
     with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
         zip_ref.extractall(directory_to_extract_to)
