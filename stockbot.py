@@ -5,10 +5,9 @@ import sys
 import time
 import os
 import re
-import urllib.request
 
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException, NoSuchElementException, WebDriverException
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
 
 from PIL import Image
@@ -17,8 +16,6 @@ import datetime
 from imgurpython import ImgurClient
 
 import socket
-
-from subprocess import run
 
 try:
     filename = sys.argv[1]
@@ -60,11 +57,18 @@ except IndexError:
 
 ##print("SLOW_INTERNET = " + str(SLOW_INTERNET))
 
+# Change this to whatever your bot name is
+BOT_NAME = "!stock"
+
 BOT_IS_IDLE = True
 
-GECKO_PATH = os.path.join(os.getcwd(),"geckodriver") + r"/geckodriver"
+GECKO_PATH = os.path.join(os.getcwd(), "geckodriver") + r"/geckodriver"
 
-if not os.path.exists(os.path.join(os.getcwd), 'screenshots')):
+# Download Latest version of Chrome Driver and replace this with the necessary
+# path
+CHROME_DRIVER_PATH = GECKO_PATH
+
+if not os.path.exists(os.path.join(os.getcwd), 'screenshots'):
     os.mkdir('screenshots')
 
 
@@ -103,7 +107,7 @@ class SGXScraper(object):
                                 self.company_name = line.split(",")[1].strip()
                                 self.matches[code] = self.company_name
 
-                elif ((len(company) <= 5) and (company.isupper() or (re.match('^.*[0-9]+',company)))):
+                elif ((len(company) <= 5) and (company.isupper() or (re.match('^.*[0-9]+', company)))):
                     self.company = company
                     with open("Listings/sgx.csv", "r") as file:
                         for line in file:
@@ -138,9 +142,6 @@ class SGXScraper(object):
                         self.driver = webdriver.Chrome(executable_path = CHROME_DRIVER_PATH,chrome_options=chrome_options)
 
         def take_screenshot(self, filename):
-            #if not os.path.exists("screenshots"):
-            #    os.makedirs("screenshots")
-
             current_dir = os.getcwd()
             os.chdir(current_dir + "/screenshots")
 
@@ -192,7 +193,6 @@ class SGXScraper(object):
 
         @client.event
         async def scrape_site(self):
-                stock_markets = ['sgx']
                 stock_market_limit = 1
                 curr = 0
 
@@ -222,9 +222,7 @@ class SGXScraper(object):
                     time.sleep(SLOW_INTERNET)
                     try:
                         overview = self.driver.find_element_by_xpath(overview)
-                    except NoSuchElementException as e:
-                        ##print(e)
-                        #print("Case 2")
+                    except NoSuchElementException:
                         try:
                             self.embed_stats = discord.Embed(title="Stock Market Analysis for " + self.company_name, color=0x00008b)
 
@@ -420,7 +418,6 @@ class NYSEScraper(object):
                 self.message = message
                 self.company_name = None
 
-                code = None
                 self.US_Q = []
                 self.embed_stats = None
                 self.gray_market = None
@@ -442,7 +439,7 @@ class NYSEScraper(object):
                     company =  ""
                     self.check_files_name(self.file_dict, company)
 
-                elif ((len(company) <= 5) and (company.isupper() or (re.match('^.*[0-9]+',company)))):
+                elif ((len(company) <= 5) and (company.isupper() or (re.match('^.*[0-9]+', company)))):
                     self.company = company
                     self.check_files_code(self.file_dict, company)
                 else:
@@ -454,7 +451,6 @@ class NYSEScraper(object):
                         self.company = "T"
 
                     if self.company_name is None:
-                        #print("Oh no")
                         print("Company Name not found. Please try again")
 
         def check_files_code(self, file_list, company):
@@ -493,9 +489,6 @@ class NYSEScraper(object):
                         self.driver = webdriver.Chrome(executable_path = CHROME_DRIVER_PATH,chrome_options=chrome_options)
 
         def take_screenshot(self, company_name, option, filename):
-            #if not os.path.exists("screenshots"):
-            #    os.makedirs("screenshots")
-
             current_dir = os.getcwd()
             os.chdir(current_dir + "/screenshots")
 
@@ -662,16 +655,16 @@ async def on_message(message):
     global BOT_IS_IDLE
     print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
 
-    if ("!stock help" in message.content):
+    if (BOT_NAME + " help" in message.content):
         embed1 = discord.Embed(title="StockBot Help", description="", color=0x0000bb)
-        embed1.add_field(name="Search USA Stocks", value="!stock US {company}")
-        embed1.add_field(name="Search USA Stocks across a Time Period", value="!stock US {company} {time}\n")
+        embed1.add_field(name="Search USA Stocks", value=BOT_NAME + " US {company}")
+        embed1.add_field(name="Search USA Stocks across a Time Period", value=BOT_NAME + " US {company} {time}\n")
         embed1.add_field(name="Time Period Options for USA: ", value="1D, 15D, 1M, 3M, 6M, 1Y, 3Y, 5Y")
         embed1.add_field(name="Example : ", value="'!stock US Apple Inc 1M'")
         embed1.add_field(name="View All USA Companies", value="'!stock US all'")
         embed2 = discord.Embed(title="StockBot Help", description="", color=0x0000eb)
-        embed2.add_field(name="Search Singapore Stocks", value="!stock SG {company}")
-        embed2.add_field(name="Search Singapore Stocks across a Time Period", value="!stock SG {company} {time}")
+        embed2.add_field(name="Search Singapore Stocks", value=BOT_NAME + " SG {company}")
+        embed2.add_field(name="Search Singapore Stocks across a Time Period", value=BOT_NAME + " SG {company} {time}")
         embed2.add_field(name="Time Period Options for Singapore: ", value="1D, 1W, 1M, 1Y, 5Y")
         embed2.add_field(name="Example : ", value="'!stock SG Katrina Inc 1M'")
         embed2.add_field(name="View All Singapore Companies", value="'!stock SG all'")
@@ -681,10 +674,10 @@ async def on_message(message):
     def check(msg):
         return msg.author == message.author
 
-    if ("!stock SG " in message.content and BOT_IS_IDLE == True):
-        arg_list = message.content.split("!stock SG ")
+    if (BOT_NAME + " SG " in message.content and BOT_IS_IDLE == True):
+        arg_list = message.content.split(BOT_NAME + " SG ")
 
-        if(arg_list[1] == "" or message.content == "!stock SG "):
+        if(arg_list[1] == "" or message.content == BOT_NAME + " SG "):
             await message.channel.send("Bad Request")
 
         if arg_list[0] == "":
@@ -748,8 +741,8 @@ async def on_message(message):
                 # Now get the response
                 msg = await client.wait_for('message', check=check)
 
-                if "!stock " in msg.content:
-                    arg_list = msg.content.split("!stock ")
+                if BOT_NAME + " " in msg.content:
+                    arg_list = msg.content.split(BOT_NAME + " ")
 
                     if arg_list[0] == "":
                         input_num = int(arg_list[1])
@@ -766,10 +759,10 @@ async def on_message(message):
                 await stocksbot.scrape_site()
                 await stocksbot.send_sg_photo()
 
-    elif ("!stock US " in message.content and BOT_IS_IDLE == True):
-        arg_list = message.content.split("!stock US ")
+    elif (BOT_NAME + " US " in message.content and BOT_IS_IDLE == True):
+        arg_list = message.content.split(BOT_NAME + " US ")
 
-        if(arg_list[1] == ""or message.content == "!stock US "):
+        if(arg_list[1] == ""or message.content == BOT_NAME + " US "):
             await message.channel.send("Bad Request")
 
         if arg_list[0] == "":
@@ -816,7 +809,7 @@ async def on_message(message):
                     embed.add_field(name=str(curr) + ". " + stocksbot.matches[company_code].strip('"'), value="Symbol: " + company_code.strip('"') + "\n" + "Exchange: " + stocksbot.exchange[curr-1].replace("Listings/","").upper())
                     if curr % 25 == 0:
                         await message.channel.send(embed=embed)
-                        embed = discord.Embed(title="", description="Please select the Stock Number : (!stock {number})", color=0x00003b)
+                        embed = discord.Embed(title="", description="Please select the Stock Number : (" + BOT_NAME + "{number})", color=0x00003b)
                     curr += 1
 
                 if curr-1 % 25 != 0:
@@ -825,8 +818,8 @@ async def on_message(message):
                 # Now get the response
                 msg = await client.wait_for('message', check=check)
 
-                if "!stock " in msg.content:
-                    arg_list = msg.content.split("!stock ")
+                if BOT_NAME + " " in msg.content:
+                    arg_list = msg.content.split(BOT_NAME + " ")
 
                     if arg_list[0] == "":
                         input_num = int(arg_list[1])
