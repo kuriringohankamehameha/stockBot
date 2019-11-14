@@ -1,11 +1,11 @@
 # stockBot
 A Discord Bot which scrapes US and SGX Stock Exchange Sites and presents an Analysis over select periods of time
 
-![](https://imgur.com/SCGPghD)
+![](https://i.imgur.com/SCGPghD.png)
 
-![](https://imgur.com/XraEOpp)
+![](https://i.imgur.com/XraEOpp.png)
 
-![](https://imgur.com/L6sbxnE)
+![](https://i.imgur.com/L6sbxnE.png)
 
 <!--
 ![](https://i.imgur.com/WlkygPa.png?1)
