@@ -2,7 +2,12 @@
 
 ## Prerequisites
 
+* You must have a Developer token associated with you, for the Bot. Go to your Discord Developer Account(go to https://discordapp.com/developers/ and select your application or create one if you haven't already)
+
+* You must also have the client_id and client_secret from the Imgur API (Go to https://api.imgur.com/oauth2/addclient and register your application to get the credentials)
+
 Add your Discord Bot token in `token.txt`
+
 Get Imgur API Credentials and add them inside `imgur_creds.txt` (First line contains `client_id` and the second line contains `client_secret`)
 
 ## Setting up all requirements
@@ -14,6 +19,11 @@ Get Imgur API Credentials and add them inside `imgur_creds.txt` (First line cont
 * Finally, after running the inital setup, install all requirements using :
 ```
     pip3 install -r requirements.txt
+```
+
+* Make the script executable using :
+```
+chmod +x stockbot.py
 ```
 
 ### Mac Users:
@@ -29,6 +39,11 @@ Install the required packages using MacPorts/Homebrew:
     pip3 install -r requirements.txt
 ```
 
+* Make the script executable using :
+```
+chmod +x stockbot.py
+```
+
 ## Running the Bot
 
 ### Options
@@ -42,3 +57,24 @@ In other cases, run:
 ```
 ./stockbot.py
 ```
+
+* The Bot has now started, and you can now run commands on it
+
+### PASSING COMMANDS TO THE BOT:
+
+To pass commands, you have the command as : "!YourBOTName COUNTRY COMPANY TIME"
+
+COUNTRY can be : 1. US -> USA (OR) 2. SG -> Singapore
+COMPANY can be : "AAPL" or "Apple Inc"
+(Read the full list in nyse_stocks.txt and sgx_stocks.txt)
+TIME can be : 1D = Within 1 Day
+              5D = 5 Days (For US ONLY)
+              1W = Within 1 Week (For SG ONLY)
+              1M = Within the last 1 Month
+              6M = Within the last 6 months(For US ONLY)
+              1Y = Within the last 1 year
+              5y = Within the last 5 years
+
+An Example Command : "!YourBOTName US AAPL 1D"
+The same can be achieved by : "!YourBOTName US Apple Inc 1D"
+This gives the price and the graph of the Company within the past day
