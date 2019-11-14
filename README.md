@@ -3,7 +3,7 @@
 ## Prerequisites
 
 Add your Discord Bot token in `token.txt`
-Get Imgur API Credentials and add them inside `imgur_creds.txt`
+Get Imgur API Credentials and add them inside `imgur_creds.txt` (First line contains `client_id` and the second line contains `client_secret`)
 
 ## Setting up all requirements
 
