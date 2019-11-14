@@ -70,7 +70,7 @@ else:
         tar.close()
         os.chdir(cwd)
     GECKO_PATH = GECKO_DIR + '/geckodriver'
-    """
+
     import platform
     platf = platform.platform().strip().lower()
     if "manjaro" in platf:
@@ -86,15 +86,15 @@ else:
     elif "centos" in platf:
         PKGM = "yum"
     if PKGM == "yum":
-        run([PKGM, "-y", "install", "firefox", "pypy", "python"])
+        run(["sudo", PKGM, "-y", "install", "firefox", "pypy", "python"])
     elif PKGM == "pacman":
-        run([PKGM, "-S", "firefox", "pypy", "python", opt])
+        run(["sudo", PKGM, "-S", "firefox", "pypy", "python", opt])
     else:
-        run([PKGM, "install", "-y", "firefox", "pypy", "python"])
+        run(["sudo", PKGM, "install", "-y", "firefox", "pypy", "python"])
 
 run(["pip3", "install", "-r", "requirements.txt"])
-"""
+
 
 # Now install all packages in the machine
-update_distro("ubuntu")
-install_packages("ubuntu")
+# update_distro("ubuntu")
+# install_packages("ubuntu")

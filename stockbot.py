@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-"""
 import discord
 import sys
 import time
@@ -9,45 +8,6 @@ import re
 import urllib.request
 
 from selenium import webdriver
-#from selenium.webdriver.support.ui import WebDriverWait
-#from selenium.webdriver.support import expected_conditions as EC
-#from selenium.webdriver.common.by import By
-#from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import TimeoutException, NoSuchElementException, WebDriverException
-from selenium.webdriver.common.action_chains import ActionChains
-
-from PIL import Image
-import datetime
-
-from imgurpython import ImgurClient
-
-import socket
-
-from subprocess import run
-
-#Checks for System and assigns it's corresponding Package Manager
-#sys_check_cmd = "lsb_release -ds 2>/dev/null || cat /etc/*release 2>/dev/null | head -n1 || uname -om"
-
-#distro = subprocess.run([sys_check_cmd], stdout=subprocess.PIPE).stdout.decode("utf-8").strip()
-
-#print(distro)
-
-#run(["yum", "-y", "install", "firefox", "pypy", "python"])
-
-"""
-
-import discord
-import sys
-import time
-import os
-import re
-import urllib.request
-
-from selenium import webdriver
-#from selenium.webdriver.support.ui import WebDriverWait
-#from selenium.webdriver.support import expected_conditions as EC
-#from selenium.webdriver.common.by import By
-#from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException, NoSuchElementException, WebDriverException
 from selenium.webdriver.common.action_chains import ActionChains
 
@@ -68,7 +28,24 @@ except:
     filename = "token.txt"
 
 token = open(filename, "r").readline().strip()
+if token == '':
+    print('Error: Need a valid Discord Bot token inside token.txt. Get it from developer options and try again')
+    exit(0)
 client = discord.Client()
+
+client_id = ''
+client_secret = ''
+
+with open('imgur_creds.txt', 'r') as f:
+    for i, line in enumerate(f):
+        if i == 0:
+            client_id = line.strip()
+        else:
+            client_secret = line.strip()
+
+if client_id == '' or client_secret == '':
+    print('Error: Imgur tokens must be valid. Set them before running the bot.')
+    exit(0)
 
 WAIT_TIME = 17
 
@@ -85,11 +62,10 @@ except IndexError:
 
 BOT_IS_IDLE = True
 
+GECKO_PATH = os.path.join(os.getcwd(),"geckodriver") + r"/geckodriver"
+
 def upload_image(filename):
     # Account settings for imgur. Get these from the Imgur API
-    client_id = ''
-    client_secret = ''
-
     client = ImgurClient(client_id, client_secret)
     image = client.upload_from_path(filename, anon=True)
     url = image['link']
@@ -251,6 +227,8 @@ class SGXScraper(object):
                             price = self.driver.find_elements_by_class_name("sgx-price-value")[0].text
                             change = self.driver.find_elements_by_class_name("sgx-price-change")[0].text
 
+                            self.embed_stats.add_field(name="URL", value=url)
+
                             self.embed_stats.add_field(name="Price", value=price)
                             self.embed_stats.add_field(name="Price Change", value=change)
 
@@ -273,6 +251,8 @@ class SGXScraper(object):
                 overview_path = "/html/body/div[1]/main/div[1]/article/template-base/div/div/section[1]/div/sgx-widgets-wrapper/widget-stocks-company-data/div[1]/sgx-content-table/div/table/tbody/tr["
 
                 self.embed_stats = discord.Embed(title="Stock Market Analysis for " + self.company_name, color=0x00008b)
+
+                self.embed_stats.add_field(name="URL", value=url)
 
                 price = self.driver.find_elements_by_class_name("sgx-price-value")[0].text
                 change = self.driver.find_elements_by_class_name("sgx-price-change")[0].text
@@ -501,7 +481,7 @@ class NYSEScraper(object):
                         options = webdriver.FirefoxOptions()
                         options.headless = True
                         options.set_preference("dom.push.enabled", False)
-                        self.driver = webdriver.Firefox(executable_path=GECKO_PATH, firefox_options=options)
+                        self.driver = webdriver.Firefox(executable_path=GECKO_PATH, options=options)
                 elif self.browser == "Chrome":
                         chrome_options = webdriver.ChromeOptions()
                         chrome_options.add_argument("--disable-infobars")
@@ -538,7 +518,7 @@ class NYSEScraper(object):
             time.sleep(7)
 
             full_chart = self.driver.find_element_by_xpath("//*[@id='sal-iframe-full-chart-modal']")
-            full_chart = full_chart.find_elements_by_xpath(".//*")[0]
+            full_chart = full_chart.find_elements_by_xpath(".//*")[1]
             chart_url = full_chart.get_attribute("src")
 
             self.driver.get(chart_url)
@@ -589,6 +569,8 @@ class NYSEScraper(object):
                     url = "https://www.morningstar.com/stocks/" + self.stock_code + "/" + self.company.lower() + "/quote.html"
                     self.driver.get(url)
                     time.sleep(5)
+
+                    self.embed_stats.add_field(name="URL", value=url)
 
                     price_path = "//*[@id='message-box-price']"
 
@@ -771,7 +753,6 @@ async def on_message(message):
                             code = list(stocksbot.matches.keys())[input_num-1]
                         except IndexError:
                             return
-                        print("Code = " + code)
                         stocksbot = SGXScraper("Firefox", code.upper(), time_limit, message)
                         await stocksbot.setupDrivers()
                         await stocksbot.scrape_site()
