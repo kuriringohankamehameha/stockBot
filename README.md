@@ -60,20 +60,22 @@ In other cases, run:
 
 * The Bot has now started, and you can now run commands on it
 
-### PASSING COMMANDS TO THE BOT:
+### Passing Commands to the Bot:
 
-To pass commands, you have the command as : "!YourBOTName COUNTRY COMPANY TIME"
+* To pass commands, you have the command as : "!YourBOTName COUNTRY COMPANY TIME"
 
-COUNTRY can be : 1. US -> USA (OR) 2. SG -> Singapore
-COMPANY can be : "AAPL" or "Apple Inc"
-(Read the full list in nyse_stocks.txt and sgx_stocks.txt)
-TIME can be : 1D = Within 1 Day
-              5D = 5 Days (For US ONLY)
-              1W = Within 1 Week (For SG ONLY)
-              1M = Within the last 1 Month
-              6M = Within the last 6 months(For US ONLY)
-              1Y = Within the last 1 year
-              5y = Within the last 5 years
+* COUNTRY can be : 1. US -> USA (OR) 2. SG -> Singapore
+
+* COMPANY can be : "AAPL" or "Apple Inc" (Read the full list in nyse_stocks.txt and sgx_stocks.txt)
+
+TIME can be : 
+* 1D = Within 1 Days </br>
+* 5D = 5 Days (For US ONLY) </br>
+* 1W = Within 1 Week (For SG ONLY) </br>
+* 1M = Within the last 1 Month </br>
+* 6M = Within the last 6 months(For US ONLY) </br>
+* 1Y = Within the last 1 year </br>
+* 5y = Within the last 5 years </br>
 
 An Example Command : "!YourBOTName US AAPL 1D"
 The same can be achieved by : "!YourBOTName US Apple Inc 1D"
