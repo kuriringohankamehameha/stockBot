@@ -64,6 +64,10 @@ BOT_IS_IDLE = True
 
 GECKO_PATH = os.path.join(os.getcwd(),"geckodriver") + r"/geckodriver"
 
+if not is.path.exists(os.path.join(os.getcwd), 'screenshots')):
+    os.mkdir('screenshots')
+
+
 def upload_image(filename):
     # Account settings for imgur. Get these from the Imgur API
     client = ImgurClient(client_id, client_secret)
