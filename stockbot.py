@@ -718,46 +718,7 @@ async def on_message(message):
                 await message.channel.send("Please send the correct Time Period (Options = {1D, 1W, 1M, 1Y, 5Y})")
 
             stocksbot = SGXScraper("Firefox", company_code, time_limit ,message)
-
-            if len(stocksbot.matches) == 0:
-                await message.channel.send("Company Name not found.")
-
-            elif len(stocksbot.matches) > 1:
-                embed = discord.Embed(title="", description="Please select the Stock Number : (!stock {number})", color=0x00003b)
-                curr = 1
-
-                for company_code in stocksbot.matches:
-                    embed.add_field(name=str(curr) + ". " + stocksbot.matches[company_code].strip('"'), value="Symbol: " + company_code.strip('"') + "\n" + "Exchange: SGX")
-
-                    if curr % 25 == 0:
-                        await message.channel.send(embed=embed)
-                        embed = discord.Embed(title="", description="Please select the Stock Number : (!stock {number})", color=0x00003b)
-
-                    curr += 1
-
-                if curr-1 % 25 != 0:
-                    await message.channel.send(embed=embed)
-
-                # Now get the response
-                msg = await client.wait_for('message', check=check)
-
-                if BOT_NAME + " " in msg.content:
-                    arg_list = msg.content.split(BOT_NAME + " ")
-
-                    if arg_list[0] == "":
-                        input_num = int(arg_list[1])
-                        try:
-                            code = list(stocksbot.matches.keys())[input_num-1]
-                        except IndexError:
-                            return
-                        stocksbot = SGXScraper("Firefox", code.upper(), time_limit, message)
-                        await stocksbot.setupDrivers()
-                        await stocksbot.scrape_site()
-                        await stocksbot.send_sg_photo()
-            else:
-                await stocksbot.setupDrivers()
-                await stocksbot.scrape_site()
-                await stocksbot.send_sg_photo()
+            await make_choice(stocksbot, message, check, time_limit, 'SG')
 
     elif (BOT_NAME + " US " in message.content and BOT_IS_IDLE == True):
         arg_list = message.content.split(BOT_NAME + " US ")
@@ -798,42 +759,55 @@ async def on_message(message):
                 return
             #print("Company = " + company_code + " and time = " + time_limit)
             stocksbot = NYSEScraper("Firefox", company_code, time_limit, message)
+            await make_choice(stocksbot, message, check, time_limit, 'US')
 
-            if len(stocksbot.matches) == 0:
-                await message.channel.send("Company Name not found.")
+async def make_choice(stocksbot, message, check, time_limit, region='US'):
+    if len(stocksbot.matches) == 0:
+        await message.channel.send("Company Name not found.")
 
-            elif len(stocksbot.matches) > 1:
-                embed = discord.Embed(title="", description="Please select the Stock Number : (!stock {number})", color=0x00003b)
-                curr = 1
-                for company_code in stocksbot.matches:
-                    embed.add_field(name=str(curr) + ". " + stocksbot.matches[company_code].strip('"'), value="Symbol: " + company_code.strip('"') + "\n" + "Exchange: " + stocksbot.exchange[curr-1].replace("Listings/","").upper())
-                    if curr % 25 == 0:
-                        await message.channel.send(embed=embed)
-                        embed = discord.Embed(title="", description="Please select the Stock Number : (" + BOT_NAME + "{number})", color=0x00003b)
-                    curr += 1
+    elif len(stocksbot.matches) > 1:
+        embed = discord.Embed(title="", description="Please select the Stock Number : (!stock {number})", color=0x00003b)
+        curr = 1
+        for company_code in stocksbot.matches:
+            embed.add_field(name=str(curr) + ". " + stocksbot.matches[company_code].strip('"'), value="Symbol: " + company_code.strip('"') + "\n" + "Exchange: " + stocksbot.exchange[curr-1].replace("Listings/","").upper())
+            if curr % 25 == 0:
+                await message.channel.send(embed=embed)
+                embed = discord.Embed(title="", description="Please select the Stock Number : (" + BOT_NAME + "{number})", color=0x00003b)
+            curr += 1
 
-                if curr-1 % 25 != 0:
-                    await message.channel.send(embed=embed)
+        if curr-1 % 25 != 0:
+            await message.channel.send(embed=embed)
 
-                # Now get the response
-                msg = await client.wait_for('message', check=check)
+        # Now get the response
+        msg = await client.wait_for('message', check=check)
 
-                if BOT_NAME + " " in msg.content:
-                    arg_list = msg.content.split(BOT_NAME + " ")
+        if BOT_NAME + " " in msg.content:
+            arg_list = msg.content.split(BOT_NAME + " ")
 
-                    if arg_list[0] == "":
-                        input_num = int(arg_list[1])
-                        try:
-                            code = list(stocksbot.matches.keys())[input_num-1]
-                        except IndexError:
-                            return
-                        #print("Code = " + code, )
-                        stocksbot = NYSEScraper("Firefox", code.upper(), time_limit, message)
-                        await stocksbot.setupDrivers()
-                        await stocksbot.scrape_site()
-                        await stocksbot.send_us_photo()
-            else:
+            if arg_list[0] == "":
+                input_num = int(arg_list[1])
+                try:
+                    code = list(stocksbot.matches.keys())[input_num-1]
+                except IndexError:
+                    return
+                #print("Code = " + code, )
+                stocksbot = NYSEScraper("Firefox", code.upper(), time_limit, message)
                 await stocksbot.setupDrivers()
                 await stocksbot.scrape_site()
-                await stocksbot.send_us_photo()
-client.run(token)
+                if region == 'US':
+                    await stocksbot.send_us_photo()
+                else:
+                    await stocksbot.send_sg_photo()
+    else:
+        await stocksbot.setupDrivers()
+        await stocksbot.scrape_site()
+        if region == 'US':
+            await stocksbot.send_us_photo()
+        else:
+            await stocksbot.send_sg_photo()
+
+def main():
+    client.run(token)
+
+if __name__ == '__main__':
+    main()
