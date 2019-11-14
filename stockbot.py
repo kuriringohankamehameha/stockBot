@@ -68,7 +68,7 @@ GECKO_PATH = os.path.join(os.getcwd(), "geckodriver") + r"/geckodriver"
 # path
 CHROME_DRIVER_PATH = GECKO_PATH
 
-if not os.path.exists(os.path.join(os.getcwd), 'screenshots'):
+if not os.path.exists(os.path.join(os.getcwd(), 'screenshots')):
     os.mkdir('screenshots')
 
 
