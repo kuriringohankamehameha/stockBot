@@ -64,7 +64,7 @@ BOT_IS_IDLE = True
 
 GECKO_PATH = os.path.join(os.getcwd(),"geckodriver") + r"/geckodriver"
 
-if not is.path.exists(os.path.join(os.getcwd), 'screenshots')):
+if not os.path.exists(os.path.join(os.getcwd), 'screenshots')):
     os.mkdir('screenshots')
 
 
