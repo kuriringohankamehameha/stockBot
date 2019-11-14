@@ -62,7 +62,7 @@ In other cases, run:
 
 ### Passing Commands to the Bot:
 
-* To pass commands, you have the command as : "!YourBOTName COUNTRY COMPANY TIME"
+* To pass commands, you have the command as : `!YourBOTName COUNTRY COMPANY TIME`
 
 * COUNTRY can be : 1. US -> USA (OR) 2. SG -> Singapore
 
@@ -77,6 +77,6 @@ TIME can be :
 * 1Y = Within the last 1 year </br>
 * 5y = Within the last 5 years </br>
 
-An Example Command : "!YourBOTName US AAPL 1D"
-The same can be achieved by : "!YourBOTName US Apple Inc 1D"
+* An Example Command : `!YourBOTName US AAPL 1D`
+The same can be achieved by : `!YourBOTName US Apple Inc 1D`
 This gives the price and the graph of the Company within the past day
