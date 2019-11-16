@@ -660,14 +660,14 @@ async def on_message(message):
         embed1.add_field(name="Search USA Stocks", value=BOT_NAME + " US {company}")
         embed1.add_field(name="Search USA Stocks across a Time Period", value=BOT_NAME + " US {company} {time}\n")
         embed1.add_field(name="Time Period Options for USA: ", value="1D, 15D, 1M, 3M, 6M, 1Y, 3Y, 5Y")
-        embed1.add_field(name="Example : ", value="'!stock US Apple Inc 1M'")
-        embed1.add_field(name="View All USA Companies", value="'!stock US all'")
+        embed1.add_field(name="Example : ", value="'" + BOT_NAME + " US Apple Inc 1M'")
+        embed1.add_field(name="View All USA Companies", value="'" + BOT_NAME + " US all'")
         embed2 = discord.Embed(title="StockBot Help", description="", color=0x0000eb)
         embed2.add_field(name="Search Singapore Stocks", value=BOT_NAME + " SG {company}")
         embed2.add_field(name="Search Singapore Stocks across a Time Period", value=BOT_NAME + " SG {company} {time}")
         embed2.add_field(name="Time Period Options for Singapore: ", value="1D, 1W, 1M, 1Y, 5Y")
-        embed2.add_field(name="Example : ", value="'!stock SG Katrina Inc 1M'")
-        embed2.add_field(name="View All Singapore Companies", value="'!stock SG all'")
+        embed2.add_field(name="Example : ", value="'" + BOT_NAME + " SG Katrina Inc 1M'")
+        embed2.add_field(name="View All Singapore Companies", value="'" + BOT_NAME + " SG all'")
         await message.channel.send(embed=embed1)
         await message.channel.send(embed=embed2)
 
@@ -766,7 +766,7 @@ async def make_choice(stocksbot, message, check, time_limit, region='US'):
         await message.channel.send("Company Name not found.")
 
     elif len(stocksbot.matches) > 1:
-        embed = discord.Embed(title="", description="Please select the Stock Number : (!stock {number})", color=0x00003b)
+        embed = discord.Embed(title="", description="Please select the Stock Number : (" + BOT_NAME + " {number})", color=0x00003b)
         curr = 1
         for company_code in stocksbot.matches:
             embed.add_field(name=str(curr) + ". " + stocksbot.matches[company_code].strip('"'), value="Symbol: " + company_code.strip('"') + "\n" + "Exchange: " + stocksbot.exchange[curr-1].replace("Listings/","").upper())
