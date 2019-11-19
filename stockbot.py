@@ -62,7 +62,7 @@ BOT_NAME = "!stock"
 
 BOT_IS_IDLE = True
 
-GECKO_PATH = os.path.join(os.getcwd(), "geckodriver") + r"/geckodriver"
+GECKO_PATH = os.path.join(os.path.join(os.getcwd(), "geckodriver"), "geckodriver")
 
 # Download Latest version of Chrome Driver and replace this with the necessary
 # path
@@ -100,7 +100,7 @@ class SGXScraper(object):
                 elif company == "selectall":
                     self.company = ""
                     company =  ""
-                    with open("Listings/sgx.csv", "r") as file:
+                    with open(os.path.join(os.getcwd(), "Listings", "sgx.csv"), "r") as file:
                         for line in file:
                             if self.company.lower() in line.split(",")[0].lower():
                                 code = line.split(",")[0]
@@ -109,13 +109,13 @@ class SGXScraper(object):
 
                 elif ((len(company) <= 5) and (company.isupper() or (re.match('^.*[0-9]+', company)))):
                     self.company = company
-                    with open("Listings/sgx.csv", "r") as file:
+                    with open(os.path.join(os.getcwd(), "Listings", "sgx.csv"), "r") as file:
                         for line in file:
                             if self.company.lower() == line.split(",")[0].lower():
                                 self.company_name = line.split(",")[1].strip()
                                 self.matches[self.company] = self.company_name
                 else:
-                    with open("Listings/sgx.csv", "r") as file:
+                    with open(os.path.join(os.getcwd(), "Listings", "sgx.csv"), "r") as file:
                         for line in file:
                             if company.lower() in line.split(",")[1].lower():
                                 code = line.split(",")[0]
@@ -426,7 +426,12 @@ class NYSEScraper(object):
                 self.exceptions = ["AT&T"]
                 self.stock_market = None
                 self.stock_code = None
-                self.file_dict = {"Listings/nyse.csv":"xnys","Listings/NASDAQ.csv":"xnas","Listings/amex.csv":"xase","Listings/otcbb.csv":"pinx"}
+                self.file_dict = {
+                    os.path.join("Listings", "nyse.csv") :"xnys",
+                    os.path.join("Listings", "NASDAQ.csv") :"xnas",
+                    os.path.join("Listings", "amex.csv"): "xase",
+                    os.path.join("Listings", "otcbb.csv"): "pinx"
+                }
 
                 self.matches = {}
                 self.exchange = []
@@ -632,7 +637,7 @@ class NYSEScraper(object):
         @client.event
         async def send_us_photo(self):
             current_dir = os.getcwd()
-            os.chdir(current_dir + "/screenshots")
+            os.chdir(os.path.join(current_dir,  "screenshots"))
 
             self.embed_stats.add_field(name=self.company_name + " Graph", value="Visualization over a period of " + self.graph_time)
             self.embed_stats.set_image(url=upload_image(os.getcwd() + "/" + self.US_Q[0]))
