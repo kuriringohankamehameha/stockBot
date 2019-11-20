@@ -427,10 +427,10 @@ class NYSEScraper(object):
                 self.stock_market = None
                 self.stock_code = None
                 self.file_dict = {
-                    os.path.join("Listings", "nyse.csv") :"xnys",
-                    os.path.join("Listings", "NASDAQ.csv") :"xnas",
-                    os.path.join("Listings", "amex.csv"): "xase",
-                    os.path.join("Listings", "otcbb.csv"): "pinx"
+                    os.path.join(os.getcwd(), "Listings", "nyse.csv") :"xnys",
+                    os.path.join(os.getcwd(), "Listings", "NASDAQ.csv") :"xnas",
+                    os.path.join(os.getcwd(), "Listings", "amex.csv"): "xase",
+                    os.path.join(os.getcwd(), "Listings", "otcbb.csv"): "pinx"
                 }
 
                 self.matches = {}
