@@ -1,5 +1,5 @@
 selenium==3.141.0
 discord.py==1.2.3
 imgurpython==1.1.7
-Pillow==6.2.0
+Pillow==10.0.1
 discord==1.0.1
